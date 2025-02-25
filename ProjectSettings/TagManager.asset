@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Domino
   - Controller
+  - PlayArea
   layers:
   - Default
   - TransparentFX

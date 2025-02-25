@@ -1,25 +1,19 @@
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
+
+// This script is responsible for
+//  - Managing the line renderers for the controller raycast and the domino line preview
+//  - Taking points on the surface that the player "draws" on
+//  - Generating a curve out of the player-drawn points, which is sent to DominoManager
+//      to instantiate the dominos
 
 public class PlayerLineDraw : MonoBehaviour
 {
     [SerializeField]
-    private GameObject m_DominoPrefab;
-
-    [SerializeField]
     private float m_PointDistanceThreshold;
 
     [SerializeField]
-    private float m_DominoDistance;
-
-    [SerializeField]
-    private float m_ColorGradientStep;
-
-    [SerializeField]
     private Transform m_RightHandTransform;
-
-
 
     [SerializeField]
     private LineRenderer m_RayLineRenderer;
@@ -35,37 +29,41 @@ public class PlayerLineDraw : MonoBehaviour
 
     private bool m_TriggerPressedLastFrame = false;
     private List<Vector3> m_CurrentLinePositions = new();
-    void Update() // todo: hella cleanup
+
+    void Update()
     {
         SetDominoPreviewLineRendererPoints();
 
         Vector3? currentPoint = null;
 
-        if (Physics.Raycast(m_RightHandTransform.position, m_RightHandTransform.forward, out RaycastHit hitInfo ,10.0f))
+        // Check if player is pointing at valid play area
+        if (Physics.Raycast(m_RightHandTransform.position, m_RightHandTransform.forward, out RaycastHit hitInfo, 10.0f) 
+            && hitInfo.collider.gameObject.CompareTag("PlayArea"))
         {
             SetRayCastLineRendererPoints(hitInfo.point);
             currentPoint = hitInfo.point;
         }
-        else 
+        else
         {
             ClearLineRendererPoints();
         }
 
+        // Right hand trigger pressed
         if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))
         {
             m_TriggerPressedLastFrame = true;
 
             if (currentPoint != null)
                 TryAddPoint((Vector3)currentPoint);
-
-        } 
+        }
+        // Trigger Released
         else if (m_TriggerPressedLastFrame)
         {
             m_TriggerPressedLastFrame = false;
             ResetDominoPreview();
 
             List<Vector3> curvePoints = GenerateCurveFromPoints();
-            StartCoroutine(SpawnDominosAlongCurve(curvePoints));
+            DominoManager.Instance.SpawnCurve(curvePoints);
             m_CurrentLinePositions.Clear();
         }
     }
@@ -88,50 +86,6 @@ public class PlayerLineDraw : MonoBehaviour
         }
     }
 
-    private float m_CurrentColorHue = 0.0f;
-
-    IEnumerator SpawnDominosAlongCurve(List<Vector3> curvePoints)
-    {
-        if (curvePoints == null || curvePoints.Count < 2)
-            yield break;
-
-        float accumulatedDistance = 0f;
-        float targetDistance = m_DominoDistance;
-        int i = 1;
-        while (i < curvePoints.Count)
-        {
-            float segment = Vector3.Distance(curvePoints[i - 1], curvePoints[i]);
-            while (accumulatedDistance + segment >= targetDistance)
-            {
-                float t = (targetDistance - accumulatedDistance) / segment;
-                Vector3 spawnPos = Vector3.Lerp(curvePoints[i - 1], curvePoints[i], t);
-
-                // use the segment's direction as an approximation for the tangent
-
-                Vector3 tangent;
-
-                if (i == 0)
-                    tangent = (curvePoints[1] - curvePoints[0]).normalized;
-                else if (i == curvePoints.Count - 1)
-                    tangent = (curvePoints[i] - curvePoints[i - 1]).normalized;
-                else
-                    tangent = (curvePoints[i + 1] - curvePoints[i - 1]).normalized;
-
-                Quaternion rotation = Quaternion.LookRotation(tangent);
-
-                Instantiate(m_DominoPrefab, spawnPos, rotation).GetComponentInChildren<Domino>().hue =
-                    m_CurrentColorHue;
-                m_CurrentColorHue += m_ColorGradientStep;
-                m_CurrentColorHue %= 1;
-
-                targetDistance += m_DominoDistance;
-                yield return new WaitForSeconds(0.01f); // adjust as needed
-            }
-            accumulatedDistance += segment;
-            i++;
-        }
-    }
-
     List<Vector3> GenerateCurveFromPoints()
     {
         List<Vector3> curvePoints = new();
@@ -142,18 +96,17 @@ public class PlayerLineDraw : MonoBehaviour
             return curvePoints;
         }
 
-        // along curve, we want our ideal distance to be m_DominoDistance
-
         for (int i = 1; i < m_CurrentLinePositions.Count - 2; i++)
         {
             Vector3 p0 = m_CurrentLinePositions[i - 1];
             Vector3 p1 = m_CurrentLinePositions[i];
             Vector3 p2 = m_CurrentLinePositions[i + 1];
             Vector3 p3 = m_CurrentLinePositions[i + 2];
-            float calculatedDomDist = Vector3.Distance(p1, p2) / m_DominoDistance;
+
+            float calculatedDomDist = Vector3.Distance(p1, p2) / 0.001f; // This was m_DominoDistance before
 
             // Sample points along the spline and add them to the list
-            for (float t = 0; t < Vector3.Distance(p1, p2); t += calculatedDomDist) // 0.1f can be adjusted for smoothness
+            for (float t = 0; t < Vector3.Distance(p1, p2); t += calculatedDomDist)
             {
                 Vector3 splinePoint = GetCatmullRomPosition(t, p0, p1, p2, p3);
                 curvePoints.Add(splinePoint);
@@ -182,7 +135,7 @@ public class PlayerLineDraw : MonoBehaviour
     void SetRayCastLineRendererPoints(Vector3 pointHit)
     {
         m_RayLineRenderer.positionCount = 2;
-        m_RayLineRenderer.SetPositions(new Vector3[]{ m_RightHandTransform.position, pointHit });
+        m_RayLineRenderer.SetPositions(new Vector3[] { m_RightHandTransform.position, pointHit });
     }
 
     void SetDominoPreviewLineRendererPoints()
@@ -194,7 +147,7 @@ public class PlayerLineDraw : MonoBehaviour
     void ClearLineRendererPoints()
     {
         m_RayLineRenderer.positionCount = 0;
-        m_RayLineRenderer.SetPositions(new Vector3[]{});
+        m_RayLineRenderer.SetPositions(new Vector3[] { });
     }
 
     void ResetDominoPreview()

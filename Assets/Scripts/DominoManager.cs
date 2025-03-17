@@ -22,6 +22,7 @@ public class DominoManager : MonoBehaviour
     private GameObject m_ClearDominosButton;
 
     private List<DominoCurve> curves = new();
+    private List<GameObject> singles = new();
 
     void Awake()
     {
@@ -43,7 +44,6 @@ public class DominoManager : MonoBehaviour
         StartCoroutine(SpawnDominosAlongCurve(curve));
     }
 
-    private float m_CurrentColorHue = 0;
 
     IEnumerator SpawnDominosAlongCurve(List<Vector3> curvePoints)
     {
@@ -77,11 +77,7 @@ public class DominoManager : MonoBehaviour
 
                 Quaternion rotation = Quaternion.LookRotation(tangent);
 
-                Instantiate(m_DominoPrefab, spawnPos, rotation, curveObj.transform)
-                    .GetComponentInChildren<Domino>()
-                    .hue = m_CurrentColorHue;
-                m_CurrentColorHue += m_ColorGradientStep;
-                m_CurrentColorHue %= 1;
+                Instantiate(m_DominoPrefab, spawnPos, rotation, curveObj.transform);
 
                 targetDistance += m_DominoDistance;
                 yield return new WaitForSeconds(0.01f); // adjust as needed
@@ -103,10 +99,34 @@ public class DominoManager : MonoBehaviour
 
     public void ClearDominos()
     {
-        foreach (DominoCurve curve in curves)
+        Debug.Log($"Domino manager clearing {curves.Count} curves and {singles.Count} singles.");
+
+        for (int i = 0; i < curves.Count; i++)
         {
-            Destroy(curve.gameObject);
+            Destroy(curves[i].gameObject);
         }
+
+        for (int i = 0; i < singles.Count; i++)
+        {
+            Destroy(singles[i]);
+        }
+
         curves.Clear();
+        singles.Clear();
+    }
+
+    public void InstantiateSingle(Vector3 pos, Quaternion rot)
+    {
+        GameObject dom = Instantiate(m_DominoPrefab, pos, rot);
+        singles.Add(dom);
+    }
+
+    private float m_CurrentColorHue = 0;
+
+    public float GetNextHue()
+    {
+        m_CurrentColorHue += m_ColorGradientStep;
+        m_CurrentColorHue %= 1;
+        return m_CurrentColorHue;
     }
 }

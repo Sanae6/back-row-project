@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,15 +17,26 @@ public class PlayerLineDraw : MonoBehaviour
     private Transform m_RightHandTransform;
 
     [SerializeField]
+    private float m_RotationScalar = 2.0f;
+
+    [SerializeField]
     private LineRenderer m_RayLineRenderer;
 
     [SerializeField]
     private LineRenderer m_DominoPreviewLineRenderer;
 
+    [SerializeField]
+    private GameObject m_DominoPreviewPrefab;
+
+    private GameObject m_DominoPreviewInstance;
+
     void Start()
     {
         m_RayLineRenderer.positionCount = 2;
         m_RayLineRenderer.SetPositions(new Vector3[0]);
+
+        m_DominoPreviewInstance = Instantiate(m_DominoPreviewPrefab);
+        m_DominoPreviewInstance.SetActive(false);
     }
 
     private bool m_TriggerPressedLastFrame = false;
@@ -35,13 +47,25 @@ public class PlayerLineDraw : MonoBehaviour
         SetDominoPreviewLineRendererPoints();
 
         Vector3? currentPoint = null;
+        Vector3? hitNormal = null;
+
+        m_DominoPreviewInstance.SetActive(false);
 
         // Check if player is pointing at valid play area
-        if (Physics.Raycast(m_RightHandTransform.position, m_RightHandTransform.forward, out RaycastHit hitInfo, 10.0f) 
-            && hitInfo.collider.gameObject.CompareTag("PlayArea"))
+        // Ignore the starting area box collider
+        if (
+            Physics.Raycast(
+                m_RightHandTransform.position,
+                m_RightHandTransform.forward,
+                out RaycastHit hitInfo,
+                10.0f,
+                ~LayerMask.GetMask("StartArea")
+            ) && hitInfo.collider.gameObject.CompareTag("PlayArea")
+        )
         {
             SetRayCastLineRendererPoints(hitInfo.point);
             currentPoint = hitInfo.point;
+            hitNormal = hitInfo.normal;
         }
         else
         {
@@ -53,7 +77,7 @@ public class PlayerLineDraw : MonoBehaviour
         {
             m_TriggerPressedLastFrame = true;
 
-            if (currentPoint != null)
+            if (currentPoint != null && hitNormal == Vector3.up)
                 TryAddPoint((Vector3)currentPoint);
         }
         // Trigger Released
@@ -66,6 +90,58 @@ public class PlayerLineDraw : MonoBehaviour
             DominoManager.Instance.SpawnCurve(curvePoints);
             m_CurrentLinePositions.Clear();
         }
+        // If not drawing a line, not pressing button, but pointing at valid area, show preview
+        else if (
+            !OVRInput.Get(OVRInput.RawButton.B)
+            && currentPoint != null
+            && hitNormal == Vector3.up
+        )
+        {
+            Debug.Log("Preview");
+            m_DominoPreviewInstance.SetActive(true);
+            m_DominoPreviewInstance.transform.position = (Vector3)currentPoint;
+
+            float angle = Vector3.SignedAngle(
+                CalculateUpVector(m_RightHandTransform.forward),
+                m_RightHandTransform.up,
+                m_RightHandTransform.forward
+            );
+
+            m_DominoPreviewInstance.transform.rotation = Quaternion.Euler(
+                0,
+                -(float)angle * m_RotationScalar,
+                0
+            );
+
+            Debug.Log("Angle: " + angle);
+        }
+        else if (OVRInput.Get(OVRInput.RawButton.B) && currentPoint != null)
+        {
+            Debug.Log("Spawning single domino!!");
+
+            float angle = Vector3.SignedAngle(
+                CalculateUpVector(m_RightHandTransform.forward),
+                m_RightHandTransform.up,
+                m_RightHandTransform.forward
+            );
+
+            DominoManager.Instance.InstantiateSingle(
+                (Vector3)currentPoint,
+                Quaternion.Euler(0, -(float)angle * m_RotationScalar, 0)
+            );
+        }
+    }
+
+    Vector3 CalculateUpVector(Vector3 forward)
+    {
+        Vector3 referenceWorldUp = Vector3.up;
+        // Handle case when forward is parallel to world up
+        if (Vector3.Cross(forward, referenceWorldUp).sqrMagnitude < 0.0001f)
+        {
+            referenceWorldUp = Vector3.forward; // Use a different reference
+        }
+        Vector3 right = Vector3.Cross(forward, referenceWorldUp).normalized;
+        return Vector3.Cross(right, forward).normalized;
     }
 
     void TryAddPoint(Vector3 point)

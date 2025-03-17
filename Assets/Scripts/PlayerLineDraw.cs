@@ -7,6 +7,7 @@ using UnityEngine;
 //  - Taking points on the surface that the player "draws" on
 //  - Generating a curve out of the player-drawn points, which is sent to DominoManager
 //      to instantiate the dominos
+//  - Single domino stuff
 
 public class PlayerLineDraw : MonoBehaviour
 {
@@ -40,6 +41,8 @@ public class PlayerLineDraw : MonoBehaviour
     }
 
     private bool m_TriggerPressedLastFrame = false;
+    private bool m_BButtonPressed = false;
+
     private List<Vector3> m_CurrentLinePositions = new();
 
     void Update()
@@ -97,7 +100,6 @@ public class PlayerLineDraw : MonoBehaviour
             && hitNormal == Vector3.up
         )
         {
-            Debug.Log("Preview");
             m_DominoPreviewInstance.SetActive(true);
             m_DominoPreviewInstance.transform.position = (Vector3)currentPoint;
 
@@ -112,11 +114,10 @@ public class PlayerLineDraw : MonoBehaviour
                 -(float)angle * m_RotationScalar,
                 0
             );
-
-            Debug.Log("Angle: " + angle);
         }
-        else if (OVRInput.Get(OVRInput.RawButton.B) && currentPoint != null)
+        else if (OVRInput.Get(OVRInput.RawButton.B) && currentPoint != null && !m_BButtonPressed)
         {
+            m_BButtonPressed = true;
             Debug.Log("Spawning single domino!!");
 
             float angle = Vector3.SignedAngle(
@@ -129,6 +130,10 @@ public class PlayerLineDraw : MonoBehaviour
                 (Vector3)currentPoint,
                 Quaternion.Euler(0, -(float)angle * m_RotationScalar, 0)
             );
+        }
+        if (!OVRInput.Get(OVRInput.RawButton.B))
+        {
+            m_BButtonPressed = false;
         }
     }
 

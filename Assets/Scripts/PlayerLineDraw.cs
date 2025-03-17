@@ -96,6 +96,10 @@ public class PlayerLineDraw : MonoBehaviour
             return curvePoints;
         }
 
+        // the first and last points are manually added, since they don't have neighbours on both sides
+        // to be used for curve interpolation
+        curvePoints.Add(m_CurrentLinePositions[0]);
+
         for (int i = 1; i < m_CurrentLinePositions.Count - 2; i++)
         {
             Vector3 p0 = m_CurrentLinePositions[i - 1];
@@ -103,15 +107,16 @@ public class PlayerLineDraw : MonoBehaviour
             Vector3 p2 = m_CurrentLinePositions[i + 1];
             Vector3 p3 = m_CurrentLinePositions[i + 2];
 
-            float calculatedDomDist = Vector3.Distance(p1, p2) / 0.001f; // This was m_DominoDistance before
-
             // Sample points along the spline and add them to the list
-            for (float t = 0; t < Vector3.Distance(p1, p2); t += calculatedDomDist)
+            for (float t = 0; t < Vector3.Distance(p1, p2); t += 0.001f)
             {
                 Vector3 splinePoint = GetCatmullRomPosition(t, p0, p1, p2, p3);
                 curvePoints.Add(splinePoint);
             }
         }
+
+        curvePoints.Add(m_CurrentLinePositions[m_CurrentLinePositions.Count - 1]);
+
         return curvePoints;
     }
 

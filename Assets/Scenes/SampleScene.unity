@@ -236,12 +236,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 33884227}
-  - component: {fileID: 33884230}
-  - component: {fileID: 33884229}
+  - component: {fileID: 33884235}
   - component: {fileID: 33884231}
   - component: {fileID: 33884233}
   - component: {fileID: 33884234}
-  - component: {fileID: 33884235}
+  - component: {fileID: 33884229}
+  - component: {fileID: 33884230}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged

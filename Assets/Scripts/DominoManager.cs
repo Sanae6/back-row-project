@@ -51,7 +51,7 @@ public class DominoManager : MonoBehaviour
             yield break;
 
         GameObject curveObj = new GameObject("DominoCurve");
-        DominoCurve curve = curveObj.AddComponent<DominoCurve>();
+        curveObj.AddComponent<DominoCurve>();
 
         float accumulatedDistance = 0f;
         float targetDistance = m_DominoDistance;

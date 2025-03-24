@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6c90ba31f6d79f40bbce08ca04e8c43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PushActivationThreshold: 0.02
+  m_PushActivationThreshold: 0.015
   ButtonPressed:
     m_PersistentCalls:
       m_Calls: []

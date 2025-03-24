@@ -26,6 +26,7 @@ public class PressableButton : MonoBehaviour
     void Update()
     {
         float dist = Vector3.Distance(m_OriginalPosition, transform.position);
+
         if (dist > m_PushActivationThreshold)
         {
             ButtonPressed.Invoke();

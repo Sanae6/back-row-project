@@ -31,5 +31,10 @@ public class PressableButton : MonoBehaviour
         {
             ButtonPressed.Invoke();
         }
+
+        if (transform.position.y > m_OriginalPosition.y)
+        {
+            transform.position = m_OriginalPosition;
+        }
     }
 }

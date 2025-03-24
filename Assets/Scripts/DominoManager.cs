@@ -121,6 +121,12 @@ public class DominoManager : MonoBehaviour
         singles.Add(dom);
     }
 
+    public void DeleteSingle(Domino dom)
+    {
+        singles.Remove(dom.gameObject);
+        Destroy(dom.gameObject);
+    }
+
     private float m_CurrentColorHue = 0;
 
     public float GetNextHue()
@@ -129,4 +135,5 @@ public class DominoManager : MonoBehaviour
         m_CurrentColorHue %= 1;
         return m_CurrentColorHue;
     }
+
 }

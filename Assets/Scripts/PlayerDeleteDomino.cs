@@ -46,8 +46,6 @@ public class PlayerDeleteDomino : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("AAAAA");
-
         if (!m_Deleting)
             return;
 

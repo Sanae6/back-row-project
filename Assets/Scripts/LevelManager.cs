@@ -13,18 +13,24 @@ public enum LevelState
 
 public class LevelManager : MonoBehaviour
 {
-    [HideInInspector]
-    public static LevelManager Instance;
 
     [SerializeField]
     private BoxCollider m_BoxCollider;
 
+    [SerializeField]
+    private ActivationPad[] m_ActivationPads;
+
     [HideInInspector]
     public UnityEvent<LevelState> LevelStateUpdated;
+
+    [HideInInspector]
+    public static LevelManager Instance;
 
     // A legal level state is one where no domino has collided
     // with a domino that was not valid.
     private LevelState m_LevelState = LevelState.Valid;
+
+    private List<CannonGravity> m_CannonBalls = new();
 
     void Awake()
     {
@@ -48,6 +54,11 @@ public class LevelManager : MonoBehaviour
     public void RegisterGoalDomino(GoalDomino goalDomino)
     {
         m_GoalDominosToppled.Add(goalDomino, false);
+    }
+
+    public void RegisterCannonBall(CannonGravity cannonball)
+    {
+        m_CannonBalls.Add(cannonball);
     }
 
     // Assumes the domino has been registered
@@ -101,5 +112,15 @@ public class LevelManager : MonoBehaviour
         // Reset state
         m_LevelState = LevelState.Valid;
         LevelStateUpdated.Invoke(m_LevelState);
+
+        for (int i = 0; i < m_CannonBalls.Count; i++)
+        {
+            Destroy(m_CannonBalls[i].gameObject);
+        }
+        m_CannonBalls.Clear();
+
+        // Reset activation pads so cannons can fire, etc etc
+        foreach (ActivationPad pad in m_ActivationPads)
+            pad.Reset();
     }
 }

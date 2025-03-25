@@ -6,7 +6,7 @@ public class Cannon : MonoBehaviour
     private ActivationPad m_ActivationPad;
 
     [SerializeField]
-    private GameObject m_CannonPrefab;
+    private GameObject m_CannonBallPrefab;
 
     [SerializeField]
     private Transform m_CannonLaunchTransform;
@@ -32,14 +32,14 @@ public class Cannon : MonoBehaviour
 
     private void OnButtonPressed()
     {
-        GameObject go = Instantiate(m_CannonPrefab, m_CannonLaunchTransform.position, Quaternion.identity);
+        GameObject go = Instantiate(m_CannonBallPrefab, m_CannonLaunchTransform.position, Quaternion.identity);
         go.GetComponent<Rigidbody>().linearVelocity = m_CannonLaunchTransform.forward * m_CannonVelocity;
         go.GetComponent<CannonGravity>().GravityScale = m_Gravity;
-        go.GetComponent<Domino>().isValid = true;
+        go.GetComponent<Domino>().OnValidCollision();
     }
 
 
-    private int steps = 1000;
+    private int steps = 100;
 
     private void OnDrawGizmos()
     {

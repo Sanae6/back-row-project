@@ -8,6 +8,11 @@ public class ActivationPad : MonoBehaviour
 
     private bool m_HasActivated = false;
 
+    void Start()
+    {
+        LevelManager.Instance.RegisterActivationPad(this);
+    }
+
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Activation Pad colliding!!");
@@ -20,6 +25,7 @@ public class ActivationPad : MonoBehaviour
 
             if (otherIsValid)
             {
+                Debug.Log("Activation pad triggered by valid domino");
                 m_HasActivated = true;
                 PadActivated.Invoke();
             }

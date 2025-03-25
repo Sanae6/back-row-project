@@ -49,7 +49,6 @@ public class GoalDomino : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Domino"))
         {
-            Debug.Log("Goal domino performing validity check...");
             m_HasCollided = true;
             bool otherIsValid = collision.gameObject.GetComponent<Domino>().isValid;
 
@@ -58,6 +57,12 @@ public class GoalDomino : MonoBehaviour
                 LevelManager.Instance.RegisterInvalidTopple(collision.GetContact(0).point);
                 return;
             }
+            m_ValidTopple = true;
+        }
+        // Handle edge cases where gold dominos are toppled by other gold dominos
+        else if (collision.gameObject.CompareTag("GoalDomino"))
+        {
+            m_HasCollided = true;
             m_ValidTopple = true;
         }
     }

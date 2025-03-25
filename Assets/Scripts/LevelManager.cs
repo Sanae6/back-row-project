@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,7 +19,7 @@ public class LevelManager : MonoBehaviour
     private BoxCollider m_BoxCollider;
 
     [SerializeField]
-    private ActivationPad[] m_ActivationPads;
+    private List<ActivationPad> m_ActivationPads;
 
     [HideInInspector]
     public UnityEvent<LevelState> LevelStateUpdated;
@@ -59,6 +60,11 @@ public class LevelManager : MonoBehaviour
     public void RegisterCannonBall(CannonGravity cannonball)
     {
         m_CannonBalls.Add(cannonball);
+    }
+
+    public void RegisterActivationPad(ActivationPad pad)
+    {
+        m_ActivationPads.Add(pad);
     }
 
     // Assumes the domino has been registered

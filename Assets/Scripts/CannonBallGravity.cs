@@ -11,6 +11,7 @@ public class CannonGravity : MonoBehaviour
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();
+        LevelManager.Instance.RegisterCannonBall(this);
     }
 
     void FixedUpdate()

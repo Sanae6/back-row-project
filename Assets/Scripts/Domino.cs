@@ -39,16 +39,21 @@ public class Domino : MonoBehaviour
                 return;
             }
 
-            Color c = Color.HSVToRGB(DominoManager.Instance.GetNextHue(), 1.0f, 1.0f);
-            Renderer r = GetComponent<Renderer>();
-
-            r.material.color = c;
-            r.material.SetColor("_EmissionColor", c);
-            r.material.EnableKeyword("_EMISSION");
-
-            isValid = true;
-            m_HasCollided = true;
+            OnValidCollision();
         }
+    }
+
+    public void OnValidCollision()
+    {
+        Color c = Color.HSVToRGB(DominoManager.Instance.GetNextHue(), 1.0f, 1.0f);
+        Renderer r = GetComponent<Renderer>();
+
+        r.material.color = c;
+        r.material.SetColor("_EmissionColor", c);
+        r.material.EnableKeyword("_EMISSION");
+
+        isValid = true;
+        m_HasCollided = true;
     }
 
     public void ResetValidity()

@@ -8,7 +8,6 @@ public class CannonGravity : MonoBehaviour
 
     private Rigidbody m_Rigidbody;
 
-
     void Start()
     {
         m_Rigidbody = GetComponent<Rigidbody>();

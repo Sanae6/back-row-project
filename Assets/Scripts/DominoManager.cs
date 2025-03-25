@@ -17,14 +17,11 @@ public class DominoManager : MonoBehaviour
     [SerializeField]
     private float m_ColorGradientStep;
 
-    [Space(5)]
-    [SerializeField]
-    private GameObject m_ClearDominosButton;
+    private List<DominoCurve> m_Curves = new();
+    private List<GameObject> m_Singles = new();
+    private List<PosRot> m_LastValidState = new();
 
-    private List<DominoCurve> curves = new();
-    private List<GameObject> singles = new();
-
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
             Instance = this;
@@ -34,9 +31,7 @@ public class DominoManager : MonoBehaviour
 
     void Start()
     {
-        m_ClearDominosButton
-            .GetComponentInChildren<PressableButton>()
-            .ButtonPressed.AddListener(OnClearDominosButtonPressed);
+        StartCoroutine(WatchForValidDominoStateEvery(0.5f));
     }
 
     public void SpawnCurve(List<Vector3> curve)
@@ -44,6 +39,52 @@ public class DominoManager : MonoBehaviour
         StartCoroutine(SpawnDominosAlongCurve(curve));
     }
 
+    IEnumerator WatchForValidDominoStateEvery(float seconds)
+    {
+        while (true)
+        {
+            if (LevelManager.Instance.GetLevelState() != LevelState.Valid)
+            {
+                yield return new WaitForSeconds(seconds);
+                continue;
+            }
+
+            if (m_Curves.Count == 0 && m_Singles.Count == 0)
+            {
+                yield return new WaitForSeconds(seconds);
+                continue;
+            }
+
+            m_LastValidState.Clear();
+
+            for (int i = 0; i < m_Curves.Count; i++)
+            {
+                foreach (Transform child in m_Curves[i].transform)
+                {
+                    m_LastValidState.Add(
+                        new PosRot()
+                        {
+                            Pos = child.transform.position,
+                            Rot = child.transform.rotation,
+                        }
+                    );
+                }
+            }
+
+            for (int i = 0; i < m_Singles.Count; i++)
+            {
+                m_LastValidState.Add(
+                    new PosRot()
+                    {
+                        Pos = m_Singles[i].transform.position,
+                        Rot = m_Singles[i].transform.rotation,
+                    }
+                );
+            }
+
+            yield return new WaitForSeconds(seconds);
+        }
+    }
 
     IEnumerator SpawnDominosAlongCurve(List<Vector3> curvePoints)
     {
@@ -89,41 +130,50 @@ public class DominoManager : MonoBehaviour
 
     public void RegisterCurve(DominoCurve curve)
     {
-        curves.Add(curve);
+        m_Curves.Add(curve);
     }
 
-    private void OnClearDominosButtonPressed()
+    public void RevertToLastValidState()
     {
-        ClearDominos();
+        foreach (PosRot pr in m_LastValidState)
+        {
+            m_Singles.Add(Instantiate(m_DominoPrefab, pr.Pos, pr.Rot));
+        }
     }
 
     public void ClearDominos()
     {
-        Debug.Log($"Domino manager clearing {curves.Count} curves and {singles.Count} singles.");
+        Debug.Log(
+            $"Domino manager clearing {m_Curves.Count} curves and {m_Singles.Count} singles."
+        );
 
-        for (int i = 0; i < curves.Count; i++)
+        StopAllCoroutines();
+
+        for (int i = 0; i < m_Curves.Count; i++)
         {
-            Destroy(curves[i].gameObject);
+            Destroy(m_Curves[i].gameObject);
         }
 
-        for (int i = 0; i < singles.Count; i++)
+        for (int i = 0; i < m_Singles.Count; i++)
         {
-            Destroy(singles[i]);
+            Destroy(m_Singles[i]);
         }
 
-        curves.Clear();
-        singles.Clear();
+        m_Curves.Clear();
+        m_Singles.Clear();
+
+        StartCoroutine(WatchForValidDominoStateEvery(0.5f));
     }
 
     public void InstantiateSingle(Vector3 pos, Quaternion rot)
     {
         GameObject dom = Instantiate(m_DominoPrefab, pos, rot);
-        singles.Add(dom);
+        m_Singles.Add(dom);
     }
 
     public void DeleteSingle(Domino dom)
     {
-        singles.Remove(dom.gameObject);
+        m_Singles.Remove(dom.gameObject);
         Destroy(dom.gameObject);
     }
 
@@ -136,4 +186,9 @@ public class DominoManager : MonoBehaviour
         return m_CurrentColorHue;
     }
 
+    private struct PosRot
+    {
+        public Vector3 Pos;
+        public Quaternion Rot;
+    }
 }

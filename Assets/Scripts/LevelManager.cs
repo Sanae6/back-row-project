@@ -9,6 +9,7 @@ public enum LevelState
 {
     Valid,
     Invalid,
+    Toppling,
     Completed,
 }
 
@@ -45,6 +46,11 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public LevelState GetLevelState()
+    {
+        return m_LevelState;
+    }
+
     public bool PositionIsInStartingArea(Vector3 pos)
     {
         return m_BoxCollider.bounds.Contains(pos);
@@ -67,6 +73,11 @@ public class LevelManager : MonoBehaviour
         m_ActivationPads.Add(pad);
     }
 
+    public void RegisterBeginTopple()
+    {
+        m_LevelState = LevelState.Toppling;
+    }
+
     // Assumes the domino has been registered
     public void RegisterGoalToppled(GoalDomino goalDomino)
     {
@@ -77,7 +88,7 @@ public class LevelManager : MonoBehaviour
 
         m_GoalDominosToppled[goalDomino] = true;
 
-        if (!(m_LevelState == LevelState.Valid))
+        if (m_LevelState != LevelState.Toppling)
             return;
 
         // Every time we hear that a goal domino has been toppled,

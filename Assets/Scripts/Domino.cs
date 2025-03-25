@@ -45,6 +45,9 @@ public class Domino : MonoBehaviour
 
     public void OnValidCollision()
     {
+        if (LevelManager.Instance.GetLevelState() == LevelState.Valid)
+            LevelManager.Instance.RegisterBeginTopple();
+
         Color c = Color.HSVToRGB(DominoManager.Instance.GetNextHue(), 1.0f, 1.0f);
         Renderer r = GetComponent<Renderer>();
 

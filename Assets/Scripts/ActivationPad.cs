@@ -32,6 +32,14 @@ public class ActivationPad : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            PadActivated.Invoke();
+        }
+    }
+
     public void Reset()
     {
         m_HasActivated = false;

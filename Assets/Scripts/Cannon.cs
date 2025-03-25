@@ -17,11 +17,20 @@ public class Cannon : MonoBehaviour
     [SerializeField]
     private float m_Gravity = -1.0f;
 
+    private ParticleSystem m_ParticleSystem;
+
     void Awake()
     {
         if (m_ActivationPad == null)
         {
             Debug.LogError("Cannon with no activation pad...");
+        }
+
+        m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
+
+        if (m_ParticleSystem == null)
+        {
+            Debug.LogError("Cannon couldn't find particle system...");
         }
     }
 
@@ -36,6 +45,8 @@ public class Cannon : MonoBehaviour
         go.GetComponent<Rigidbody>().linearVelocity = m_CannonLaunchTransform.forward * m_CannonVelocity;
         go.GetComponent<CannonGravity>().GravityScale = m_Gravity;
         go.GetComponent<Domino>().OnValidCollision();
+
+        m_ParticleSystem.Play();
     }
 
 

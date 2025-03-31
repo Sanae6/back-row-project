@@ -41,7 +41,7 @@ public class Cannon : MonoBehaviour
 
     private void OnButtonPressed()
     {
-        GameObject go = Instantiate(m_CannonBallPrefab, m_CannonLaunchTransform.position, Quaternion.identity);
+        GameObject go = Instantiate(m_CannonBallPrefab, m_CannonLaunchTransform.position, Quaternion.identity, transform);
         go.GetComponent<Rigidbody>().linearVelocity = m_CannonLaunchTransform.forward * m_CannonVelocity;
         go.GetComponent<CannonGravity>().GravityScale = m_Gravity;
         go.GetComponent<Domino>().OnValidCollision();

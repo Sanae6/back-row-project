@@ -2,14 +2,11 @@ using UnityEngine;
 
 public class ChangeColorWithLevelState : MonoBehaviour
 {
-    [SerializeField]
-    private Color m_NormalColor;
+    [SerializeField] private Color m_NormalColor;
 
-    [SerializeField]
-    private Color m_CompletedColor;
+    [SerializeField] private Color m_CompletedColor;
 
-    [SerializeField]
-    private Color m_InvalidColor;
+    [SerializeField] private Color m_InvalidColor;
 
     private Renderer m_Renderer;
 
@@ -20,12 +17,11 @@ public class ChangeColorWithLevelState : MonoBehaviour
 
     void Start()
     {
-        LevelManager.Instance.LevelStateUpdated.AddListener(LevelStateUpdated);
+        LevelSystem.Instance.LevelStarted.AddListener(level => level.LevelStateUpdated.AddListener(LevelStateUpdated));
     }
 
     void LevelStateUpdated(LevelState state)
     {
-
         switch (state)
         {
             case LevelState.Invalid:

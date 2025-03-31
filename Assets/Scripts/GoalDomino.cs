@@ -17,8 +17,8 @@ public class GoalDomino : MonoBehaviour
     void Start()
     {
         LevelManager.Instance.RegisterGoalDomino(this);
-        m_StartingRotation = transform.rotation;
-        m_StartingPosition = transform.position;
+        m_StartingRotation = transform.localRotation;
+        m_StartingPosition = transform.localPosition;
         m_Renderer = GetComponent<Renderer>();
 
         m_StartingColor = m_Renderer.material.color;
@@ -33,7 +33,7 @@ public class GoalDomino : MonoBehaviour
         if (m_HasToppled || !m_ValidTopple)
             return;
 
-        if (Quaternion.Angle(m_StartingRotation, transform.rotation) > m_ToppleThreshold)
+        if (Quaternion.Angle(m_StartingRotation, transform.localRotation) > m_ToppleThreshold)
         {
             LevelManager.Instance.RegisterGoalToppled(this);
             m_HasToppled = true;
@@ -73,7 +73,7 @@ public class GoalDomino : MonoBehaviour
         m_ValidTopple = false;
         m_HasCollided = false;
 
-        transform.SetPositionAndRotation(m_StartingPosition, m_StartingRotation);
+        transform.SetLocalPositionAndRotation(m_StartingPosition, m_StartingRotation);
         m_Renderer.material.color = m_StartingColor;
 
         m_Renderer.material.SetColor("_EmissionColor", m_StartingColor);

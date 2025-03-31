@@ -92,6 +92,7 @@ public class DominoManager : MonoBehaviour
             yield break;
 
         GameObject curveObj = new GameObject("DominoCurve");
+        curveObj.transform.SetParent(transform);
         curveObj.AddComponent<DominoCurve>();
 
         float accumulatedDistance = 0f;
@@ -137,7 +138,9 @@ public class DominoManager : MonoBehaviour
     {
         foreach (PosRot pr in m_LastValidState)
         {
-            m_Singles.Add(Instantiate(m_DominoPrefab, pr.Pos, pr.Rot));
+            var domino = Instantiate(m_DominoPrefab, pr.Pos, pr.Rot);
+            domino.transform.SetParent(transform, true);
+            m_Singles.Add(domino);
         }
     }
 
@@ -168,6 +171,7 @@ public class DominoManager : MonoBehaviour
     public void InstantiateSingle(Vector3 pos, Quaternion rot)
     {
         GameObject dom = Instantiate(m_DominoPrefab, pos, rot);
+        dom.transform.SetParent(transform, true);
         m_Singles.Add(dom);
     }
 

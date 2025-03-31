@@ -4,19 +4,22 @@ using UnityEngine.Events;
 
 public class PressableButton : MonoBehaviour
 {
-    [SerializeField]
-    private float m_PushActivationThreshold = 0.04f;
+    [SerializeField] private float m_PushActivationThreshold = 0.04f;
 
     private ConfigurableJoint m_ConfigurableJoint;
 
     private Vector3 m_OriginalPosition;
 
-    [HideInInspector]
-    public UnityEvent ButtonPressed;
+    [HideInInspector] public UnityEvent ButtonPressed;
 
-    void Awake()
+    private void Awake()
     {
-        m_OriginalPosition = transform.position;
+        OnEnable();
+    }
+
+    void OnEnable()
+    {
+        m_OriginalPosition = transform.localPosition;
 
         m_ConfigurableJoint = GetComponent<ConfigurableJoint>();
         if (m_ConfigurableJoint == null)
@@ -25,16 +28,16 @@ public class PressableButton : MonoBehaviour
 
     void Update()
     {
-        float dist = Vector3.Distance(m_OriginalPosition, transform.position);
+        float dist = Vector3.Distance(m_OriginalPosition, transform.localPosition);
 
         if (dist > m_PushActivationThreshold)
         {
             ButtonPressed.Invoke();
         }
 
-        if (transform.position.y > m_OriginalPosition.y)
+        if (transform.localPosition.y > m_OriginalPosition.y)
         {
-            transform.position = m_OriginalPosition;
+            transform.localPosition = m_OriginalPosition;
         }
     }
 }

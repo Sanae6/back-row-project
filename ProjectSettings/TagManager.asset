@@ -12,7 +12,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Static Floor
   - Water
   - UI
   - DominoUntouchable

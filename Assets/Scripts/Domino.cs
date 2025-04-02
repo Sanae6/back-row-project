@@ -5,6 +5,9 @@ public class Domino : MonoBehaviour
 {
     private bool m_HasCollided = false;
 
+    [SerializeField]
+    private Renderer m_Renderer;
+
     // A domino is valid if it was instantiated in the starting area,
     // or if it has collided with a valid domino.
     //
@@ -40,7 +43,7 @@ public class Domino : MonoBehaviour
             if (!otherIsValid && !isValid)
             {
                 LevelManager.Instance.RegisterInvalidTopple(collision.GetContact(0).point);
-                GetComponent<Renderer>().material.color = Color.red;
+                m_Renderer.material.color = Color.red;
                 return;
             }
 
@@ -62,11 +65,10 @@ public class Domino : MonoBehaviour
             LevelManager.Instance.RegisterBeginTopple();
 
         Color c = Color.HSVToRGB(DominoManager.Instance.GetNextHue(), 1.0f, 1.0f);
-        Renderer r = GetComponent<Renderer>();
 
-        r.material.color = c;
-        r.material.SetColor("_EmissionColor", c);
-        r.material.EnableKeyword("_EMISSION");
+        m_Renderer.material.color = c;
+        m_Renderer.material.SetColor("_EmissionColor", c);
+        m_Renderer.material.EnableKeyword("_EMISSION");
 
         isValid = true;
         m_HasCollided = true;

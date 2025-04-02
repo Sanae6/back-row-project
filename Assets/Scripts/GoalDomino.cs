@@ -7,21 +7,15 @@ public class GoalDomino : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private Quaternion m_StartingRotation;
     private Vector3 m_StartingPosition;
-    private Color m_StartingColor;
 
     [SerializeField]
     private float m_ToppleThreshold = 45;
-
-    private Renderer m_Renderer;
 
     void Start()
     {
         LevelManager.Instance.RegisterGoalDomino(this);
         m_StartingRotation = transform.localRotation;
         m_StartingPosition = transform.localPosition;
-        m_Renderer = GetComponent<Renderer>();
-
-        m_StartingColor = m_Renderer.material.color;
     }
 
     private bool m_HasToppled = false;
@@ -74,14 +68,5 @@ public class GoalDomino : MonoBehaviour
         m_HasCollided = false;
 
         transform.SetLocalPositionAndRotation(m_StartingPosition, m_StartingRotation);
-        m_Renderer.material.color = m_StartingColor;
-
-        m_Renderer.material.SetColor("_EmissionColor", m_StartingColor);
-        m_Renderer.material.DisableKeyword("_EMISSION");
-
-        Domino dom = GetComponentInChildren<Domino>();
-
-        if (dom != null)
-            dom.ResetValidity();
     }
 }

@@ -12,12 +12,6 @@ public class CannonGravity : MonoBehaviour
     {
         m_Rigidbody = GetComponent<Rigidbody>();
         LevelManager.Instance.RegisterCannonBall(this);
-
-        // ParticleSystem ps = GetComponent<ParticleSystem>();
-
-        // ParticleSystem.TrailModule ts = ps.trails;
-        // ts.minVertexDistance = 0.01f;
-
     }
 
     void FixedUpdate()

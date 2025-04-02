@@ -17,8 +17,7 @@ public class DominoManager : MonoBehaviour
     [SerializeField]
     private float m_ColorGradientStep;
 
-    private List<DominoCurve> m_Curves = new();
-    private List<GameObject> m_Singles = new();
+    private List<Domino> m_Dominos = new();
     private List<PosRot> m_LastValidState = new();
 
     private void Awake()
@@ -49,7 +48,7 @@ public class DominoManager : MonoBehaviour
                 continue;
             }
 
-            if (m_Curves.Count == 0 && m_Singles.Count == 0)
+            if (m_Dominos.Count == 0)
             {
                 yield return new WaitForSeconds(seconds);
                 continue;
@@ -57,27 +56,20 @@ public class DominoManager : MonoBehaviour
 
             m_LastValidState.Clear();
 
-            for (int i = 0; i < m_Curves.Count; i++)
+            for (int i = 0; i < m_Dominos.Count; i++)
             {
-                foreach (Transform child in m_Curves[i].transform)
+                if (m_Dominos[i] == null)
                 {
-                    m_LastValidState.Add(
-                        new PosRot()
-                        {
-                            Pos = child.transform.position,
-                            Rot = child.transform.rotation,
-                        }
-                    );
+                    Debug.LogError("[BIG ERROR] Domino manager: Instance of domino in m_Dominos is null... Clearing state....");
+                    ClearDominos();
+                    continue;
                 }
-            }
 
-            for (int i = 0; i < m_Singles.Count; i++)
-            {
                 m_LastValidState.Add(
                     new PosRot()
                     {
-                        Pos = m_Singles[i].transform.position,
-                        Rot = m_Singles[i].transform.rotation,
+                        Pos = m_Dominos[i].transform.position - new Vector3(0, 0.05f, 0),
+                        Rot = m_Dominos[i].transform.parent.localRotation,
                     }
                 );
             }
@@ -90,9 +82,6 @@ public class DominoManager : MonoBehaviour
     {
         if (curvePoints == null || curvePoints.Count < 2)
             yield break;
-
-        GameObject curveObj = new GameObject("DominoCurve");
-        curveObj.AddComponent<DominoCurve>();
 
         float accumulatedDistance = 0f;
         float targetDistance = m_DominoDistance;
@@ -118,7 +107,12 @@ public class DominoManager : MonoBehaviour
 
                 Quaternion rotation = Quaternion.LookRotation(tangent);
 
-                Instantiate(m_DominoPrefab, spawnPos, rotation, curveObj.transform);
+                Domino dom = Instantiate(m_DominoPrefab, spawnPos, rotation).GetComponentInChildren<Domino>();
+
+                if (dom == null)
+                    Debug.LogError("Domino manager instantiated domino but unable to get Domino component...");
+
+                m_Dominos.Add(dom);
 
                 targetDistance += m_DominoDistance;
                 yield return new WaitForSeconds(0.01f); // adjust as needed
@@ -128,53 +122,66 @@ public class DominoManager : MonoBehaviour
         }
     }
 
-    public void RegisterCurve(DominoCurve curve)
-    {
-        m_Curves.Add(curve);
-    }
-
     public void RevertToLastValidState()
     {
         foreach (PosRot pr in m_LastValidState)
         {
-            m_Singles.Add(Instantiate(m_DominoPrefab, pr.Pos, pr.Rot));
+            m_Dominos.Add(Instantiate(m_DominoPrefab, pr.Pos, pr.Rot, transform).GetComponentInChildren<Domino>());
         }
     }
 
     public void ClearDominos()
     {
-        Debug.Log(
-            $"Domino manager clearing {m_Curves.Count} curves and {m_Singles.Count} singles."
-        );
+        Debug.Log($"Domino manager clearing {m_Dominos.Count} dominos.");
 
         StopAllCoroutines();
 
-        for (int i = 0; i < m_Curves.Count; i++)
+        for (int i = 0; i < m_Dominos.Count; i++)
         {
-            Destroy(m_Curves[i].gameObject);
+            if (m_Dominos[i] != null)
+                Destroy(m_Dominos[i].transform.parent.gameObject);
         }
 
-        for (int i = 0; i < m_Singles.Count; i++)
-        {
-            Destroy(m_Singles[i]);
-        }
-
-        m_Curves.Clear();
-        m_Singles.Clear();
+        m_Dominos.Clear();
 
         StartCoroutine(WatchForValidDominoStateEvery(0.5f));
     }
 
     public void InstantiateSingle(Vector3 pos, Quaternion rot)
     {
-        GameObject dom = Instantiate(m_DominoPrefab, pos, rot);
-        m_Singles.Add(dom);
+        GameObject go = Instantiate(m_DominoPrefab, pos, rot, transform);
+        Domino domino = go.GetComponentInChildren<Domino>();
+        if (domino != null)
+        {
+            m_Dominos.Add(domino);
+        }
+        else
+        {
+            Debug.LogError("Unable to get domino component on instantiated single");
+        }
+    }
+
+    // Exists for dominos that were instantiated as part of a curve, but ended up as singles
+    // e.g. when instantiated on moving platform, they must be parented to that platform
+    // so are no longer part of their curve, and must be registered to be cleared properly
+    public void RegisterSingle(Domino domino)
+    {
+        if (!m_Dominos.Contains(domino))
+        {
+            m_Dominos.Add(domino);
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Attempt to register single domino but already registered. Ignoring..."
+            );
+        }
     }
 
     public void DeleteSingle(Domino dom)
     {
-        m_Singles.Remove(dom.gameObject);
-        Destroy(dom.gameObject);
+        m_Dominos.Remove(dom);
+        Destroy(dom.gameObject.transform.parent.gameObject);
     }
 
     private float m_CurrentColorHue = 0;

@@ -76,6 +76,7 @@ public class LevelManager : MonoBehaviour
     public void RegisterBeginTopple()
     {
         m_LevelState = LevelState.Toppling;
+        LevelStateUpdated.Invoke(m_LevelState);
     }
 
     // Assumes the domino has been registered

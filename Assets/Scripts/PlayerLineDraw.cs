@@ -63,7 +63,11 @@ public class PlayerLineDraw : MonoBehaviour
                 out RaycastHit hitInfo,
                 10.0f,
                 ~LayerMask.GetMask("StartArea")
-            ) && hitInfo.collider.gameObject.CompareTag("PlayArea")
+            )
+            && (
+                hitInfo.collider.gameObject.CompareTag("PlayArea")
+                || hitInfo.collider.gameObject.CompareTag("MovingPlatform")
+            )
         )
         {
             SetRayCastLineRendererPoints(hitInfo.point);

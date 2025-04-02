@@ -25,6 +25,11 @@ public class Domino : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+        {
+            gameObject.transform.parent.parent = collision.gameObject.transform.parent;
+        }
+
         if (m_HasCollided)
             return;
 
@@ -40,6 +45,14 @@ public class Domino : MonoBehaviour
             }
 
             OnValidCollision();
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("MovingPlatform"))
+        {
+            gameObject.transform.parent.parent = DominoManager.Instance.gameObject.transform;
         }
     }
 

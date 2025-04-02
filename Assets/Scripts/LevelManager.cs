@@ -22,6 +22,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private List<ActivationPad> m_ActivationPads;
 
+    [NonSerialized]
+    public int? LevelIndex = null;
+
     [HideInInspector]
     public UnityEvent<LevelState> LevelStateUpdated;
 

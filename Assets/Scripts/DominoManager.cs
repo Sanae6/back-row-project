@@ -161,9 +161,6 @@ public class DominoManager : MonoBehaviour
         }
     }
 
-    // Exists for dominos that were instantiated as part of a curve, but ended up as singles
-    // e.g. when instantiated on moving platform, they must be parented to that platform
-    // so are no longer part of their curve, and must be registered to be cleared properly
     public void RegisterSingle(Domino domino)
     {
         if (!m_Dominos.Contains(domino))

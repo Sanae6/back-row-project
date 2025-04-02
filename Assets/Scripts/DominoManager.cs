@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,15 @@ using UnityEngine.Events;
 
 public class DominoManager : MonoBehaviour
 {
+    [HideInInspector]
+    public UnityEvent SingleDominoPlaced;
+
+    [HideInInspector]
+    public UnityEvent DominoCurvePlaced;
+
+    [HideInInspector]
+    public UnityEvent DominoErased;
+
     [HideInInspector]
     public static DominoManager Instance;
 
@@ -120,6 +130,7 @@ public class DominoManager : MonoBehaviour
             accumulatedDistance += segment;
             i++;
         }
+        DominoCurvePlaced.Invoke();
     }
 
     public void RevertToLastValidState()
@@ -154,6 +165,7 @@ public class DominoManager : MonoBehaviour
         if (domino != null)
         {
             m_Dominos.Add(domino);
+            SingleDominoPlaced.Invoke();
         }
         else
         {
@@ -161,24 +173,11 @@ public class DominoManager : MonoBehaviour
         }
     }
 
-    public void RegisterSingle(Domino domino)
-    {
-        if (!m_Dominos.Contains(domino))
-        {
-            m_Dominos.Add(domino);
-        }
-        else
-        {
-            Debug.LogWarning(
-                "Attempt to register single domino but already registered. Ignoring..."
-            );
-        }
-    }
-
     public void DeleteSingle(Domino dom)
     {
         m_Dominos.Remove(dom);
         Destroy(dom.gameObject.transform.parent.gameObject);
+        DominoErased.Invoke();
     }
 
     private float m_CurrentColorHue = 0;

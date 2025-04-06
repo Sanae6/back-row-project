@@ -35,12 +35,12 @@ public class PressableButton : MonoBehaviour
 
         if (!m_Pressed && dist > m_PushActivationThreshold)
         {
-            m_Pressed = true;
-            ButtonPressed.Invoke();
             if (m_PressedSound != null)
             {
                 AudioSource.PlayClipAtPoint(m_PressedSound, transform.position);
             }
+            m_Pressed = true;
+            ButtonPressed.Invoke();
         }
 
         if (transform.localPosition.y > m_OriginalPosition.y)

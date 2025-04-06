@@ -638,7 +638,6 @@ GameObject:
   - component: {fileID: 238546132}
   - component: {fileID: 238546131}
   - component: {fileID: 238546130}
-  - component: {fileID: 238546129}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -646,21 +645,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &238546129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 238546128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa5610b8d5fde474bbda1051fe66c1cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_NormalColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
-  m_CompletedColor: {r: 0.21853651, g: 0.7132075, b: 0, a: 0}
-  m_InvalidColor: {r: 0.735849, g: 0, b: 0, a: 0}
 --- !u!64 &238546130
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -968,6 +952,7 @@ GameObject:
   - component: {fileID: 410087041}
   - component: {fileID: 410087040}
   - component: {fileID: 410087042}
+  - component: {fileID: 410087043}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1078,6 +1063,21 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!114 &410087043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410087039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa5610b8d5fde474bbda1051fe66c1cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CompletedColor: {r: 0.035292387, g: 1, b: 0, a: 0}
+  m_InvalidColor: {r: 0.7735849, g: 0, b: 0, a: 0}
+  m_DirectionalLight: {fileID: 410087040}
 --- !u!1001 &440044657
 PrefabInstance:
   m_ObjectHideFlags: 0

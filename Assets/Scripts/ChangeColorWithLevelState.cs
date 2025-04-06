@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class ChangeColorWithLevelState : MonoBehaviour
 {
-    [SerializeField] private Color m_NormalColor;
+    private Color m_NormalColor;
 
     [SerializeField] private Color m_CompletedColor;
 
     [SerializeField] private Color m_InvalidColor;
 
-    private Renderer m_Renderer;
+    [SerializeField] private Light m_DirectionalLight;
 
     void Awake()
     {
-        m_Renderer = GetComponent<Renderer>();
+        m_NormalColor = m_DirectionalLight.color;
     }
 
     void Start()
@@ -25,13 +25,13 @@ public class ChangeColorWithLevelState : MonoBehaviour
         switch (state)
         {
             case LevelState.Invalid:
-                m_Renderer.material.color = m_InvalidColor;
+                m_DirectionalLight.color = m_InvalidColor;
                 break;
             case LevelState.Valid:
-                m_Renderer.material.color = m_NormalColor;
+                m_DirectionalLight.color = m_NormalColor;
                 break;
             case LevelState.Completed:
-                m_Renderer.material.color = m_CompletedColor;
+                m_DirectionalLight.color = m_CompletedColor;
                 break;
         }
     }

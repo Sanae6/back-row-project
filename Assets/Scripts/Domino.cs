@@ -21,6 +21,7 @@ public class Domino : MonoBehaviour
     // by a valid domino.
     [HideInInspector]
     public bool isValid = false;
+    private bool m_IsCannonBall = false;
 
     void Start()
     {
@@ -34,13 +35,16 @@ public class Domino : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(m_InstantiateSounds[Random.Range(0, m_InstantiateSounds.Count)], transform.position);
         }
+
+        m_IsCannonBall = GetComponent<Domino>() == null;
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("MovingPlatform"))
         {
-            gameObject.transform.parent.parent = collision.gameObject.transform.parent;
+            if (!m_IsCannonBall) // TODO: better solution for this
+                gameObject.transform.parent.parent = collision.gameObject.transform.parent;
         }
 
         if (m_HasCollided)
@@ -65,6 +69,9 @@ public class Domino : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("MovingPlatform"))
         {
+            if (m_IsCannonBall)
+                return;
+
             gameObject.transform.parent.parent = DominoManager.Instance.gameObject.transform;
         }
     }

@@ -127,6 +127,7 @@ public class TutorialPanel : MonoBehaviour
     void CalculateTargetWidthForText(string text)
     {
         float width = m_TextMesh.GetPreferredValues(text).x;
+        width = Mathf.Min(width, m_TextMesh.GetComponent<RectTransform>().rect.width);
         targetWidth = width + 0.1f;
     }
 

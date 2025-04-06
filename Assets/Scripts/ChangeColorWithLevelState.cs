@@ -4,11 +4,14 @@ public class ChangeColorWithLevelState : MonoBehaviour
 {
     private Color m_NormalColor;
 
-    [SerializeField] private Color m_CompletedColor;
+    [SerializeField]
+    private Color m_CompletedColor;
 
-    [SerializeField] private Color m_InvalidColor;
+    [SerializeField]
+    private Color m_InvalidColor;
 
-    [SerializeField] private Light m_DirectionalLight;
+    [SerializeField]
+    private Light m_DirectionalLight;
 
     void Awake()
     {
@@ -17,7 +20,11 @@ public class ChangeColorWithLevelState : MonoBehaviour
 
     void Start()
     {
-        LevelSystem.Instance.LevelStarted.AddListener(level => level.LevelStateUpdated.AddListener(LevelStateUpdated));
+        LevelSystem.Instance.LevelStarted.AddListener(level =>
+        {
+            m_DirectionalLight.color = m_NormalColor;
+            level.LevelStateUpdated.AddListener(LevelStateUpdated);
+        });
     }
 
     void LevelStateUpdated(LevelState state)
@@ -32,6 +39,9 @@ public class ChangeColorWithLevelState : MonoBehaviour
                 break;
             case LevelState.Completed:
                 m_DirectionalLight.color = m_CompletedColor;
+                break;
+            default:
+                m_DirectionalLight.color = m_NormalColor;
                 break;
         }
     }

@@ -145,7 +145,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4dea65ee74281c6438d00830f71d5344, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4dea65ee74281c6438d00830f71d5344, type: 3}
       propertyPath: m_LocalPosition.z
@@ -183,6 +183,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 4dea65ee74281c6438d00830f71d5344, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 0dcc6308c5f11a64e923df67aaf60b25, type: 2}
     - target: {fileID: 919132149155446097, guid: 4dea65ee74281c6438d00830f71d5344, type: 3}
       propertyPath: m_Name
       value: rug
@@ -223,7 +227,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4dea65ee74281c6438d00830f71d5344, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4dea65ee74281c6438d00830f71d5344, type: 3}
       propertyPath: m_LocalPosition.z
@@ -261,6 +265,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 4dea65ee74281c6438d00830f71d5344, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 001ca46e0ffee3b45a459dec7d9fa871, type: 2}
     - target: {fileID: 919132149155446097, guid: 4dea65ee74281c6438d00830f71d5344, type: 3}
       propertyPath: m_Name
       value: rug (1)
@@ -690,7 +698,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9bd730c8ca8220c4d827e54c577f960b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -971,7 +979,7 @@ Light:
   serializedVersion: 11
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 2
+  m_Intensity: 0.83
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2926,7 +2934,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c43f3651db7589c4ca8758c3abd504e5, type: 2}
+  - {fileID: 2100000, guid: 0fea7270083d8544888a6e5f313ef4ba, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3682,10 +3690,26 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -4683669308469848369, guid: 1c9003b0907fb9c46b9ca88a97a8190c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f74e6948ee6240d4abeeb1b6b5d840b9, type: 2}
+    - target: {fileID: -1806680513116206669, guid: 1c9003b0907fb9c46b9ca88a97a8190c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f74e6948ee6240d4abeeb1b6b5d840b9, type: 2}
+    - target: {fileID: -1120989108687609925, guid: 1c9003b0907fb9c46b9ca88a97a8190c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f74e6948ee6240d4abeeb1b6b5d840b9, type: 2}
     - target: {fileID: 919132149155446097, guid: 1c9003b0907fb9c46b9ca88a97a8190c, type: 3}
       propertyPath: m_Name
       value: sofa
       objectReference: {fileID: 0}
+    - target: {fileID: 6745302439343835087, guid: 1c9003b0907fb9c46b9ca88a97a8190c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f74e6948ee6240d4abeeb1b6b5d840b9, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

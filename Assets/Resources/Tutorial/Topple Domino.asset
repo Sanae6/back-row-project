@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11474eb25c7e0a74383bd4a0a4dbc77c, type: 3}
-  m_Name: Reset Button
+  m_Name: Topple Domino
   m_EditorClassIdentifier: 
   StartTrigger: 0
-  Text: Press the red button to reset!!
-  EndTrigger: 7
+  Text: Dominos can only be toppled from the green box on your right. Start your
+    chain there, and knock it over with your hand.
+  EndTrigger: 4

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,8 +8,18 @@ using UnityEngine;
 //      to instantiate the dominos
 //  - Single domino stuff
 
+
+public enum Hand
+{
+    Right,
+    Left,
+}
+
 public class PlayerLineDraw : MonoBehaviour
 {
+    [SerializeField]
+    private Hand m_Hand;
+
     [SerializeField]
     private float m_PointDistanceThreshold;
 
@@ -31,6 +40,10 @@ public class PlayerLineDraw : MonoBehaviour
 
     private GameObject m_DominoPreviewInstance;
 
+
+    private OVRInput.RawButton m_LineDrawButton;
+    private OVRInput.RawButton m_PlaceSingleButton;
+
     void Start()
     {
         m_RayLineRenderer.positionCount = 2;
@@ -38,10 +51,21 @@ public class PlayerLineDraw : MonoBehaviour
 
         m_DominoPreviewInstance = Instantiate(m_DominoPreviewPrefab);
         m_DominoPreviewInstance.SetActive(false);
+
+        if (m_Hand == Hand.Right)
+        {
+            m_LineDrawButton = OVRInput.RawButton.RIndexTrigger;
+            m_PlaceSingleButton = OVRInput.RawButton.B;
+        }
+        else
+        {
+            m_LineDrawButton = OVRInput.RawButton.LIndexTrigger;
+            m_PlaceSingleButton = OVRInput.RawButton.Y;
+        }
     }
 
     private bool m_TriggerPressedLastFrame = false;
-    private bool m_BButtonPressed = false;
+    private bool m_SingleButtonPressedLastFrame = false;
 
     private List<Vector3> m_CurrentLinePositions = new();
 
@@ -79,8 +103,8 @@ public class PlayerLineDraw : MonoBehaviour
             ClearLineRendererPoints();
         }
 
-        // Right hand trigger pressed
-        if (OVRInput.Get(OVRInput.RawButton.RIndexTrigger))
+        // Trigger pressed
+        if (OVRInput.Get(m_LineDrawButton))
         {
             m_TriggerPressedLastFrame = true;
 
@@ -99,7 +123,7 @@ public class PlayerLineDraw : MonoBehaviour
         }
         // If not drawing a line, not pressing button, but pointing at valid area, show preview
         else if (
-            !OVRInput.Get(OVRInput.RawButton.B)
+            !OVRInput.Get(m_PlaceSingleButton)
             && currentPoint != null
             && hitNormal == Vector3.up
         )
@@ -119,9 +143,9 @@ public class PlayerLineDraw : MonoBehaviour
                 0
             );
         }
-        else if (OVRInput.Get(OVRInput.RawButton.B) && currentPoint != null && !m_BButtonPressed)
+        else if (OVRInput.Get(m_PlaceSingleButton) && currentPoint != null && !m_SingleButtonPressedLastFrame)
         {
-            m_BButtonPressed = true;
+            m_SingleButtonPressedLastFrame = true;
             Debug.Log("Spawning single domino!!");
 
             float angle = Vector3.SignedAngle(
@@ -135,9 +159,9 @@ public class PlayerLineDraw : MonoBehaviour
                 Quaternion.Euler(0, -(float)angle * m_RotationScalar, 0)
             );
         }
-        if (!OVRInput.Get(OVRInput.RawButton.B))
+        if (!OVRInput.Get(m_PlaceSingleButton))
         {
-            m_BButtonPressed = false;
+            m_SingleButtonPressedLastFrame = false;
         }
     }
 

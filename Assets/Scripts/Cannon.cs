@@ -19,6 +19,9 @@ public class Cannon : MonoBehaviour
 
     private ParticleSystem m_ParticleSystem;
 
+    [SerializeField]
+    private AudioClip m_FiringFound;
+
     void Awake()
     {
         if (m_ActivationPad == null)
@@ -47,6 +50,7 @@ public class Cannon : MonoBehaviour
         go.GetComponent<Domino>().OnValidCollision();
 
         m_ParticleSystem.Play();
+        AudioSource.PlayClipAtPoint(m_FiringFound, transform.position);
     }
 
 

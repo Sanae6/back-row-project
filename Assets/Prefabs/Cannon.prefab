@@ -51,6 +51,7 @@ MonoBehaviour:
   m_CannonLaunchTransform: {fileID: 2223854346118507385}
   m_CannonVelocity: 1
   m_Gravity: -0.15
+  m_FiringFound: {fileID: 8300000, guid: d87d2ff800d944a419678532b222cc4f, type: 3}
 --- !u!1 &8465177290165708043
 GameObject:
   m_ObjectHideFlags: 0

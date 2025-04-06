@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Domino : MonoBehaviour
@@ -6,9 +6,14 @@ public class Domino : MonoBehaviour
     private bool m_HasCollided = false;
 
     [SerializeField]
+    private List<AudioClip> m_InstantiateSounds = new();
+
+    [SerializeField]
+    private AudioClip m_ToppleSound;
+
+    [SerializeField]
     private Renderer m_Renderer;
 
-    // A domino is valid if it was instantiated in the starting area,
     // or if it has collided with a valid domino.
     //
     // This idea is that we have a chain of validity going down
@@ -23,6 +28,11 @@ public class Domino : MonoBehaviour
         {
             gameObject.layer = 0;
             isValid = true;
+        }
+
+        if (m_InstantiateSounds.Count != 0)
+        {
+            AudioSource.PlayClipAtPoint(m_InstantiateSounds[Random.Range(0, m_InstantiateSounds.Count)], transform.position);
         }
     }
 
@@ -72,6 +82,7 @@ public class Domino : MonoBehaviour
 
         isValid = true;
         m_HasCollided = true;
+        AudioSource.PlayClipAtPoint(m_ToppleSound, transform.position);
     }
 
     public void ResetValidity()

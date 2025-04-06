@@ -136,6 +136,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 548f4a5d5d369664eab3ca264ea22f37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_InstantiateSounds:
+  - {fileID: 8300000, guid: 3dcb0e84215acda42acb8c9de71a90b7, type: 3}
+  m_ToppleSound: {fileID: 8300000, guid: 4a1bd31b0e5e2c041b1696f092ab69cd, type: 3}
   m_Renderer: {fileID: 855244070334057166}
   isValid: 0
 --- !u!1001 &6946249555126741215
@@ -206,6 +209,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: -76.7
       objectReference: {fileID: 0}
+    - target: {fileID: -1461304994638716399, guid: b86d5f80db1a0764e9a8dd3f37c94c26, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 194cabb83b0e0e54391fb7d659a3ff34, type: 2}
     - target: {fileID: 919132149155446097, guid: b86d5f80db1a0764e9a8dd3f37c94c26, type: 3}
       propertyPath: m_Name
       value: domino

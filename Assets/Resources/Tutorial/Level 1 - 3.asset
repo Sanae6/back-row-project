@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11474eb25c7e0a74383bd4a0a4dbc77c, type: 3}
-  m_Name: Topple Gold
+  m_Name: Level 1 - 3
   m_EditorClassIdentifier: 
   StartTrigger: 0
-  Text: See that gold domino on your left? It is your job to knock that over to beat
-    the level. Good luck!
-  EndTrigger: 5
+  Text: To place multiple dominos at once, hold the trigger button and draw a line
+    on the table.
+  EndTrigger: 2

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11474eb25c7e0a74383bd4a0a4dbc77c, type: 3}
-  m_Name: Erase Domino
+  m_Name: Level 1 - 2
   m_EditorClassIdentifier: 
   StartTrigger: 0
   Text: Nice work. Now erase that domino by holding the grip button and touching

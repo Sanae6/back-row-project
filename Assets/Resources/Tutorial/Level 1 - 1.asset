@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11474eb25c7e0a74383bd4a0a4dbc77c, type: 3}
-  m_Name: Clear
+  m_Name: Level 1 - 1
   m_EditorClassIdentifier: 
   StartTrigger: 0
-  Text: Press the red "Clear" button to remove all placed dominos.
-  EndTrigger: 7
+  Text: Place a domino on the table by pressing 'Y' or 'B'.
+  EndTrigger: 1

@@ -36,7 +36,7 @@ public class Domino : MonoBehaviour
             AudioSource.PlayClipAtPoint(m_InstantiateSounds[Random.Range(0, m_InstantiateSounds.Count)], transform.position);
         }
 
-        m_IsCannonBall = GetComponent<Domino>() == null;
+        m_IsCannonBall = GetComponent<Domino>() == null; // TODO
     }
 
     void OnCollisionEnter(Collision collision)
@@ -57,7 +57,8 @@ public class Domino : MonoBehaviour
             if (!otherIsValid && !isValid)
             {
                 LevelManager.Instance.RegisterInvalidTopple(collision.GetContact(0).point);
-                m_Renderer.material.color = Color.red;
+                if (m_Renderer)
+                    m_Renderer.material.color = Color.red;
                 return;
             }
 
@@ -83,13 +84,24 @@ public class Domino : MonoBehaviour
 
         Color c = Color.HSVToRGB(DominoManager.Instance.GetNextHue(), 1.0f, 1.0f);
 
-        m_Renderer.material.color = c;
-        m_Renderer.material.SetColor("_EmissionColor", c);
-        m_Renderer.material.EnableKeyword("_EMISSION");
+        if (m_Renderer)
+        {
+            m_Renderer.material.color = c;
+            m_Renderer.material.SetColor("_EmissionColor", c);
+            m_Renderer.material.EnableKeyword("_EMISSION");
+        }
 
         isValid = true;
         m_HasCollided = true;
-        AudioSource.PlayClipAtPoint(m_ToppleSound, transform.position);
+
+        if (m_ToppleSound)
+        {
+            AudioSource.PlayClipAtPoint(m_ToppleSound, transform.position);
+        }
+        else
+        {
+            Debug.LogWarning("Domino has no topple sound assigned.");
+        }
     }
 
     public void ResetValidity()

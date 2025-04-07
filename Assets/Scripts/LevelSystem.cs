@@ -61,7 +61,7 @@ public class LevelSystem : MonoBehaviour
 
         // Otherwise dominos on tabletop seem to persist between levels??
         // Better solution likely needed
-        DominoManager.Instance.ClearDominos();
+        LevelManager.Instance.ResetLevel();
 
         Time.timeScale = 0;
 
